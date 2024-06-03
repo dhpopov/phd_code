@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Модел на Попов за жизнеспособност на МСП</title>
+</head>
+<body>
+
+        <h1 style="text-align:center">Модел на Попов за жизнеспособност на МСП</h1>
+    <table border="1" style="padding:10px;margin: 0px auto;">
+  <thead>
+    <tr>
+      <th scope="col">Входни данни</th>
+      <th scope="col">Резултати</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td align="right">    
+    <form id="inputForm">
+        <label for="a">Разходи за суровини, материали и външни услуги:</label>
+        <input type="number" id="a" name="a" step="any" required="" value="0"><br><br>
+        
+        <label for="b">Общо разходи:</label>
+        <input type="number" id="b" name="b" step="any" required="" value="0"><br><br>
+        
+        <label for="c">Нетни приходи от продажби:</label>
+        <input type="number" id="c" name="c" step="any" required="" value="0"><br><br>
+        
+        <label for="d">Общо приходи:</label>
+        <input type="number" id="d" name="d" step="any" required="" value="0"><br><br>
+        
+        <label for="e">Печалба преди лихви и данъци:</label>
+        <input type="number" id="e" name="e" step="any" required="" value="0"><br><br>
+        
+        <label for="f">Материални запаси:</label>
+        <input type="number" id="f" name="f" step="any" required="" value="0"><br><br>
+        
+        <label for="g">Общо активи:</label>
+        <input type="number" id="g" name="g" step="any" required="" value="0"><br><br>
+        
+        <label for="h">Неразпределена печалба:</label>
+        <input type="number" id="h" name="h" step="any" required="" value="0"><br><br>
+        
+        <label for="i">Kраткосрочни задължения:</label>
+        <input type="number" id="i" name="i" step="any" required="" value="0"><br><br>
+        
+        <button type="button" onclick="calculateResult()">Изчисление</button>
+    </form>
+      </td>
+      <td>
+    <h2>Изчислени показатели:</h2>
+          <table>
+              <tbody><tr>
+      <td align="right">
+    <p>RETA: <span id="x1">NaN</span></p>
+    <p>COGSSALES: <span id="x2">NaN</span></p>
+    <p>EBITS: <span id="x3">NaN</span></p>
+    <p>WCTA: <span id="x4">NaN</span></p>
+    <p>NITA: <span id="x5">NaN</span></p>
+    <p>ROI: <span id="x6">NaN</span></p>
+                  </td>
+              </tr>
+          </tbody></table>
+
+    <h2>Изчислени резултати:</h2>
+    <p>Общ резултат: <span id="F">NaN</span></p>
+    <p>Категоризация: <span id="result">Жизненоспособност</span></p>
+    </td>
+  </tr></tbody>
+</table>
+    <script>
+        function calculateResult() {
+            // Get input values
+            const a = parseFloat(document.getElementById('a').value);
+            const b = parseFloat(document.getElementById('b').value);
+            const c = parseFloat(document.getElementById('c').value);
+            const d = parseFloat(document.getElementById('d').value);
+            const e = parseFloat(document.getElementById('e').value);
+            const f = parseFloat(document.getElementById('f').value);
+            const g = parseFloat(document.getElementById('g').value);
+            const h = parseFloat(document.getElementById('h').value);
+            const i = parseFloat(document.getElementById('i').value);
+
+            // Calculate factors (example ratios)
+            const x1 = h / g;
+            const x2 = a / c;
+            const x3 = e / c;
+            const x4 = (f - i) / g;
+            const x5 = (d - b) / g;
+            const x6 = d / b;
+            
+            // Display factors
+            document.getElementById('x1').innerText = x1.toFixed(2);
+            document.getElementById('x2').innerText = x2.toFixed(2);
+            document.getElementById('x3').innerText = x3.toFixed(2);
+            document.getElementById('x4').innerText = x4.toFixed(2);
+            document.getElementById('x5').innerText = x5.toFixed(2);
+            document.getElementById('x6').innerText = x6.toFixed(2);
+
+            // Hardcoded coefficients
+            const beta1 = -0.65;
+            const beta2 = 0.41;
+            const beta3 = 0.38;
+            const beta4 = -0.24;
+            const beta5 = -0.14;
+            const beta6 = -0.05;
+            
+            // Calculate F
+            const exponent = (beta1 * x1 + beta2 * x2 + beta3 * x3 + beta4 * x4 + beta5 * x5 + beta6 * x6);
+            const F = 1 / (1 + Math.exp(exponent));
+
+            // Display F
+            document.getElementById('F').innerText = F.toFixed(2);
+
+            // Determine result category based on F
+            let result;
+            if (F < 0.32) {
+                result = 'Нежизненоспособност';
+            } else if (F >= 0.32 && F < 0.68) {
+                result = 'Неопределено';
+            } else {
+                result = 'Жизненоспособност';
+            }
+
+            // Display the result
+            document.getElementById('result').innerText = result;
+        }
+    </script>
+
+
+</body></html>
